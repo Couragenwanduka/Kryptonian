@@ -13,16 +13,15 @@ const login = Yup.object().shape({
 })
 
 const file= Yup.object().shape({
-    email: Yup.string().email('invaild email').required('please provide an email address'),
-    title: Yup.string().required('please provide a title').max(100, 'title must be more than 100 characters')
+    title: Yup.string().required('please provide a title').max(100, 'title must be less than 100 characters')
 })
 
 export const validateLogin=async(email:string, password:string, otp:string)=>{
     try{
       await login.validate({email, password, otp}, {abortEarly: false})
       return true;
-    }catch(error){
-        console.log(error, 'error from validate user')
+    }catch(error:any){
+        return error.errors
     }
 }
 
@@ -30,16 +29,16 @@ export const validateUser=async(name:string, email:string, password:string)=>{
     try{
       await schema.validate({name, email, password}, {abortEarly: false})
       return true;
-    }catch(error){
-        console.log(error, 'error from validate user')
+    }catch(error:any){
+        return error.errors
     }
 }
 
-export const validateFile=async(email:string, title:string)=>{
+export const validateFile=async( title:string)=>{
     try{
-      await file.validate({email, title}, {abortEarly: false})
+      await file.validate({ title}, {abortEarly: false})
       return true;
-    }catch(error){
-        console.log(error, 'error from validate user')
+    }catch(error:any){
+        return error.errors
     }
 }

@@ -45,21 +45,25 @@ class userService {
         }
     }
 
+    async findUserByApiKey(apiKey: any) {
+      try{
+        const user = await User.findOne({apiKey});
+        return user;
+      }catch(error){
+        console.log(error);
+      }
+    }
+
     async saveFile(userId: any, file: any){
          try{
-            const user = await User.findById(userId);
-            if (!user) {
-              throw new Error('User not found');
-            }
-        
-            // Push the file to the user's files array
-            user.files.push(file);
-        
-            // Save the user document
-            await user.save();
-        
-            return user;
-
+          const user = await User.findById(userId);
+          if (!user) {
+            throw new Error('User not found');
+          }
+         const some=  user.files.push(file);
+          console.log(some)
+          await user.save();
+          return user;
          }catch(error){
             console.log(error)
          }

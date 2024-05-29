@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import router from './routes/routes';
 import connectDb from './config/mongodb'
+import multer from 'multer'
 
 connectDb();
 
@@ -12,6 +13,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use(multer)
 
 // Routes
 app.use(router);

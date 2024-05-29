@@ -2,7 +2,9 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 interface FileDocument extends Document {
   title: string;
-  file: Buffer;
+  data: Buffer;
+  mimeType:string;
+  size: number;
   createdAt: Date;
 }
 
@@ -11,9 +13,14 @@ const fileSchema = new mongoose.Schema<FileDocument>({
     type: String,
     required: true,
   },
-  file: {
+  data: {
     type: Buffer,
-    required: true,
+  },
+  mimeType:{
+   type: String,
+  },
+  size: {
+    type: Number,
   },
   createdAt: {
     type: Date,
@@ -55,7 +62,7 @@ const userSchema = new mongoose.Schema<UserDocument>({
   },
   apiKey: {
     type: String,
-    required: true,
+    
   },
   files: {
     type: [fileSchema],

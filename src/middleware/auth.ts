@@ -6,6 +6,7 @@ dotenv.config();
 
 interface JwtPayload {
   isConfirmed: boolean;
+  findUser:any
 }
 
 const isVerified = async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +20,7 @@ const isVerified = async (req: Request, res: Response, next: NextFunction) => {
 
     const user = jwt.verify(token, process.env.jwtSecret || 'secret') as JwtPayload;
 
-    if (!user.isConfirmed) {
+    if (!user.findUser.isConfirmed) {
       return res.status(401).json({ message: 'Please confirm your email address' });
     }
 

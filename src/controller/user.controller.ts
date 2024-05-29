@@ -33,9 +33,9 @@ class UserController{
      try{
        const {name , email, password}= req.body;
       
-       const vaild= await validateUser(name, email, password);
+       const vaild = await validateUser(name, email, password);
 
-       if(!vaild) return res.status(403).json({message:vaild});
+       if(vaild !== true) return res.status(403).json({message:vaild.errors});
 
        const existingUser= await userservice.findUserByEmail(email);
 
@@ -43,7 +43,7 @@ class UserController{
 
        const confirm= confirmCode();
 
-       const link = `http://localhost:4000/confirmation?token=${confirm}&email=${email}`;
+       const link = `http://localhost:4000//confirmEmail?token=${confirm}&email=${email}`;
 
 
        const sendmail= await sendConfirmationMail(email,link);
@@ -87,12 +87,13 @@ class UserController{
         }   
        const secret=  process.env.jwtSecret;
         
-      const token = jwt.sign(findUser, secret|| 'secert',{expiresIn:'1h'}) 
+       const token = jwt.sign({findUser}, secret || 'secret', { expiresIn: '1h' });
 
       redisClient.set(email, JSON.stringify(payload))
 
       res.status(200).json({message:'Otp sent successfully', token:token})
     }catch(error){
+        console.log(error);
         res.status(500).json({ message: error}) }
     }
     
@@ -100,9 +101,9 @@ class UserController{
     try{
         const {email, password, otp}= req.body;
 
-        const valid= await validateLogin(email, password, otp);
+        const valid = await validateLogin(email, password, otp);
 
-        if(!valid) return res.status(403).json({message: valid});
+        if(valid !== true) return res.status(403).json({message: valid.errors});
 
         const data=  await redisClient.get(email)
 
@@ -169,6 +170,8 @@ class UserController{
           const user= await userservice.findUserByEmail(email);
 
           if(!user) return res.status(404).json({message: 'user not found'});
+
+          if(user.isConfirmed===false) return res.status(404).json({message: ' Please confirm your email'});
 
           if(user.apiKey) return res.status(400).json({message:' user already has an API key'});
           

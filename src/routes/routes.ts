@@ -11,9 +11,9 @@ router.post('/register', usercontroller.createUser);
 
 router.post('/login', isVerified,usercontroller.login);
 
-router.post('/sendConfirmation', usercontroller.confirmCode);
+router.post('/sendOtp', usercontroller.confirmCode);
 
-router.get('/confirmation', usercontroller.confirmEmail);
+router.get('/confirmEmail', usercontroller.confirmEmail);
 
 router.get('/apikey/:email', usercontroller.createApiKey)
 
