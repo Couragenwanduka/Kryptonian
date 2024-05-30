@@ -38,7 +38,7 @@ class userService {
     }
     async addApiKey(apiKey: string, email: string) {
         try{
-          const user = await User.findOneAndUpdate({email}, {$set:{apiKey}},{new:true});
+          const user = await User.findOneAndUpdate({email}, {$set:{apiKey:apiKey}},{new:true});
           return user;
         }catch(error){
             console.log(error);
@@ -47,7 +47,16 @@ class userService {
 
     async findUserByApiKey(apiKey: any) {
       try{
-        const user = await User.findOne({apiKey});
+        const user = await User.findOne({apiKey: apiKey});
+        return user;
+      }catch(error){
+        console.log(error);
+      }
+    }
+
+    async deactivateApikey(apiKey: any) {
+      try{
+        const user = await User.findOneAndUpdate({apiKey: apiKey}, {$set:{apiKey:null}},{new:true});
         return user;
       }catch(error){
         console.log(error);
@@ -60,13 +69,22 @@ class userService {
           if (!user) {
             throw new Error('User not found');
           }
-         const some=  user.files.push(file);
-          console.log(some)
+         user.files.push(file);
           await user.save();
           return user;
          }catch(error){
             console.log(error)
          }
+    }
+
+    async getallfiles(){
+      try{
+        const user = await User.find();
+        const files= user.flatMap(user=>user.files)
+        return files;
+      }catch(error){
+        console.log(error)
+      }
     }
 }
 

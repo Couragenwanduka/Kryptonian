@@ -17,7 +17,11 @@ router.get('/confirmEmail', usercontroller.confirmEmail);
 
 router.get('/apikey/:email', usercontroller.createApiKey)
 
+router.get('/getimages', filecontroller.getFiles)
+
 router.post('/upload',verifyApiKey, upload.single('file'), filecontroller.uploadFile);
+
+router.patch('/deactivate',verifyApiKey, filecontroller.deactivateApiKey)
 
 export default router;
 

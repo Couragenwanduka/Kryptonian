@@ -43,7 +43,7 @@ class UserController{
 
        const confirm= confirmCode();
 
-       const link = `http://localhost:4000//confirmEmail?token=${confirm}&email=${email}`;
+       const link = `http://localhost:4000/confirmEmail?token=${confirm}&email=${email}`;
 
 
        const sendmail= await sendConfirmationMail(email,link);
@@ -173,13 +173,13 @@ class UserController{
 
           if(user.isConfirmed===false) return res.status(404).json({message: ' Please confirm your email'});
 
-          if(user.apiKey) return res.status(400).json({message:' user already has an API key'});
+          if(user.apiKey !== null) return res.status(400).json({message:' user already has an API key'});
           
           const apiKey= generateRandomString();
 
           if(!apiKey) return res.status(404).json({message:' api key not available'});
           
-          await userservice.addApiKey(email, apiKey);
+          await userservice.addApiKey(apiKey,email);
           
           const sendmail = await sendApiKey(email, apiKey);
 

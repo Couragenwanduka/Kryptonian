@@ -9,15 +9,17 @@ class FileController {
         try {
             const {title} = req.body;
             
-            const {apikey}= req.query
+            const {apiKey}= req.query
+
+            
 
             const valid:any = await validateFile(title);
            
             if (valid !== true) return res.status(403).json({ message: valid });
 
-            const user = await userService.findUserByApiKey(apikey);
+            const user = await userService.findUserByApiKey(apiKey);
 
-            if (!user) return res.status(404).json({ message: 'User not found' });
+            if (!user) return res.status(404).json({ message: 'invalid apiKey' });
 
 
             const file:any = req.file;
@@ -48,6 +50,57 @@ class FileController {
             console.log(error);
             res.status(500).json({ message: error });
         }
+    }
+
+    async getFiles(req: Request, res: Response) {
+        try {
+
+            const files= await userService.getallfiles()
+
+            if(files === undefined) return res.status(404).json({ message:"no files found"});
+
+            const data= files.map(file => {
+                return {
+                    title: file.title,
+                    data: file.data,
+                    mimeType: file.mimeType,
+                    size: file.size
+                }       
+        }
+
+        )
+        
+        res.status(200).json({ message: 'Files retrieved successfully', files: data });
+
+        }catch(error){
+            console.log(error);
+            res.status(500).json({ message: error}) 
+        }
+    }
+
+    async deactivateApiKey(req:Request, res:Response){
+        try{
+         const { apiKey} = req.query;
+         
+         console.log(apiKey);
+
+         const user = await userService.findUserByApiKey(apiKey);
+
+         console.log(user);
+
+         if (!user) return res.status(404).json({ message: 'User not found' });
+
+         const deactivate = await userService.deactivateApikey( apiKey)
+
+         if (!deactivate) return res.status(404).json ({ message: ' unable to deactivate apikey' });
+
+         res.status(200).json({ message:'Successfully deactivated'});
+
+        }catch(error){
+            console.log(error);
+            res.status(500).json({ message: error}) 
+        }
+        
     }
 }
 
