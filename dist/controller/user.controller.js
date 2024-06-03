@@ -47,7 +47,7 @@ class UserController {
                 if (existingUser)
                     return res.status(409).json({ message: 'user already exist' });
                 const confirm = (0, confirmation_1.confirmCode)();
-                const link = `http://localhost:4000/confirmEmail?token=${confirm}&email=${email}`;
+                const link = `https://kryptonian-2.onrender.com/confirmEmail?token=${confirm}&email=${email}`;
                 const sendmail = yield (0, nodemailer_1.sendConfirmationMail)(email, link);
                 if (!sendmail)
                     return res.status(400).json({ message: 'email did send' });

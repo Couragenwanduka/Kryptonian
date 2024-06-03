@@ -43,7 +43,7 @@ class UserController{
 
        const confirm= confirmCode();
 
-       const link = `http://localhost:4000/confirmEmail?token=${confirm}&email=${email}`;
+       const link = `https://kryptonian-2.onrender.com/confirmEmail?token=${confirm}&email=${email}`;
 
 
        const sendmail= await sendConfirmationMail(email,link);
